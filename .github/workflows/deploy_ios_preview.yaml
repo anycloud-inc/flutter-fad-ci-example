@@ -31,27 +31,67 @@ jobs:
       - name: Install flutter dependencies
         run: flutter pub get
 
-      # TODO: 消しても動くか調べる
-      # - name: Build ipa
-      #   run: flutter build ios --release --no-codesign
+      - name: Import Provisioning Profile
+        run: |
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          echo '${{ secrets.IOS_PROVISIONING_PROFILE }}' | openssl base64 -d -out ~/Library/MobileDevice/Provisioning\ Profiles/distribution.mobileprovision
 
-      - name: iOS build action
-        uses: yukiarrr/ios-build-action@v1.5.0
+      - name: Import Code-Signing Certificates
+        uses: Apple-Actions/import-codesign-certs@v1
         with:
-          output-path: app-release.ipa
-          project-path: ios/Runner.xcodeproj
-          workspace-path: ios/Runner.xcworkspace
-          code-signing-identity: Apple Distribution
-          team-id: ${{ secrets.IOS_TEAM_ID }}
-          p12-base64: ${{ secrets.IOS_CERTIFICATE_BASE64 }}
-          certificate-password: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
-          mobileprovision-base64: ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}
+          p12-file-base64: ${{ secrets.IOS_CERTIFICATE_BASE64 }}
+          p12-password: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
+
+      # - name: Install the Apple certificate and provisioning profile
+      #   env:
+      #     BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
+      #     P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+      #     BUILD_PROVISION_PROFILE_BASE64: ${{ secrets.BUILD_PROVISION_PROFILE_BASE64 }}
+      #     KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+      #   run: |
+      #     # create variables
+      #     CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
+      #     PP_PATH=$RUNNER_TEMP/build_pp.mobileprovision
+      #     KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+
+      #     # import certificate and provisioning profile from secrets
+      #     echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode --output $CERTIFICATE_PATH
+      #     echo -n "$BUILD_PROVISION_PROFILE_BASE64" | base64 --decode --output $PP_PATH
+
+      #     # create temporary keychain
+      #     security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+      #     security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+      #     security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+
+      #     # import certificate to keychain
+      #     security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+      #     security list-keychain -d user -s $KEYCHAIN_PATH
+
+      #     # apply provisioning profile
+      #     mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+      #     cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
+
+      # TODO: 消しても動くか調べる
+      - name: Build ipa
+        run: flutter build ipa --release
+
+      # - name: iOS build action
+      #   uses: yukiarrr/ios-build-action@v1.5.0
+      #   with:
+      #     output-path: app-release.ipa
+      #     project-path: ios/Runner.xcodeproj
+      #     workspace-path: ios/Runner.xcworkspace
+      #     code-signing-identity: Apple Distribution
+      #     team-id: ${{ secrets.IOS_TEAM_ID }}
+      #     p12-base64: ${{ secrets.IOS_CERTIFICATE_BASE64 }}
+      #     certificate-password: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
+      #     mobileprovision-base64: ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v1.0.0
         with:
           name: ipa
-          path: app-release.ipa
+          path: build/ios/ipa/flutter_fad_ci.ipa
 
   deploy:
     needs: [build]
