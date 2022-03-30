@@ -11,16 +11,16 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Import provisioning profile
-        run: |
-          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          echo '${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}' | base64 --decode --output ~/Library/MobileDevice/Provisioning\ Profiles/app.mobileprovision
+      # - name: Import provisioning profile
+      #   run: |
+      #     mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+      #     echo '${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}' | base64 --decode --output ~/Library/MobileDevice/Provisioning\ Profiles/app.mobileprovision
 
-      - name: Import code-signing certificates
-        uses: Apple-Actions/import-codesign-certs@v1
-        with:
-          p12-file-base64: ${{ secrets.IOS_CERTIFICATE_BASE64 }}
-          p12-password: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
+      # - name: Import code-signing certificates
+      #   uses: Apple-Actions/import-codesign-certs@v1
+      #   with:
+      #     p12-file-base64: ${{ secrets.IOS_CERTIFICATE_BASE64 }}
+      #     p12-password: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
 
       - name: Install flutter
         uses: subosito/flutter-action@v1
@@ -32,8 +32,8 @@ jobs:
         run: flutter pub get
 
       # TODO: 消しても動くか調べる
-      - name: Build ipa
-        run: flutter build ios --release --no-codesign
+      # - name: Build ipa
+      #   run: flutter build ios --release --no-codesign
 
       - name: iOS build action
         uses: yukiarrr/ios-build-action@v0.5.0
