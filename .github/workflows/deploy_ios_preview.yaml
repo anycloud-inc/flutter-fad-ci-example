@@ -73,7 +73,7 @@ jobs:
 
       # TODO: 消しても動くか調べる
       - name: Build ipa
-        run: flutter build ipa --release
+        run: flutter build ipa --release --export-options-plist=ios/ExportOptions.plist
 
       # - name: iOS build action
       #   uses: yukiarrr/ios-build-action@v1.5.0
