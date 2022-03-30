@@ -1,73 +1,73 @@
-# name: Deploy iOS to Firebase App Distribution
+name: Deploy iOS to Firebase App Distribution
 
-# on:
-#   push:
-#     branches: [ main ]
+on:
+  push:
+    branches: [ main ]
 
-# jobs:
-#   build:
-#     runs-on: macos-latest
+jobs:
+  build:
+    runs-on: macos-latest
 
-#     steps:
-#       - uses: actions/checkout@v2
+    steps:
+      - uses: actions/checkout@v2
 
-#       - name: Import provisioning profile
-#         run: |
-#           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-#           echo '${{ secrets.PROVISIONING_PROFILE }}' | openssl base64 -d -out ~/Library/MobileDevice/Provisioning\ Profiles/flutter_app_store.mobileprovision
+      - name: Import provisioning profile
+        run: |
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          echo '${{ secrets.PROVISIONING_PROFILE }}' | openssl base64 -d -out ~/Library/MobileDevice/Provisioning\ Profiles/flutter_app_store.mobileprovision
 
-#       - name: Import code-signing certificates
-#         uses: Apple-Actions/import-codesign-certs@v1
-#         with:
-#           p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
-#           p12-password: ${{ secrets.CERTIFICATES_P12_PASSWORD }}
+      - name: Import code-signing certificates
+        uses: Apple-Actions/import-codesign-certs@v1
+        with:
+          p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
+          p12-password: ${{ secrets.CERTIFICATES_P12_PASSWORD }}
 
-#       - name: Install flutter
-#         uses: subosito/flutter-action@v1
-#         with:
-# .         flutter-version: '2.10.4'
-#           channel: 'stable'
+      - name: Install flutter
+        uses: subosito/flutter-action@v1
+        with:
+          flutter-version: '2.10.4'
+          channel: 'stable'
 
-#       - name: Install flutter dependencies
-#         run: flutter pub get
+      - name: Install flutter dependencies
+        run: flutter pub get
 
-#       # TODO: 消しても動くか調べる
-#       - name: Build ipa
-#         run: flutter build ios --release --no-codesign
+      # TODO: 消しても動くか調べる
+      - name: Build ipa
+        run: flutter build ios --release --no-codesign
 
-#       - name: iOS build action
-#         uses: yukiarrr/ios-build-action@v0.5.0
-#         with:
-#           output-path: app-release.ipa
-#           project-path: ios/Runner.xcodeproj
-#           workspace-path: ios/Runner.xcworkspace
-#           code-signing-identity: Apple Distribution
-#           team-id: ${{ secrets.IOS_TEAM_ID }}
-#           p12-base64: ${{ secrets.IOS_CERTIFICATES_P12 }}
-#           certificate-password: ${{ secrets.IOS_CERTIFICATES_P12_PASSWORD }}
-#           mobileprovision-base64: ${{ secrets.IOS_PROVISIONING_PROFILE }}
+      - name: iOS build action
+        uses: yukiarrr/ios-build-action@v0.5.0
+        with:
+          output-path: app-release.ipa
+          project-path: ios/Runner.xcodeproj
+          workspace-path: ios/Runner.xcworkspace
+          code-signing-identity: Apple Distribution
+          team-id: ${{ secrets.IOS_TEAM_ID }}
+          p12-base64: ${{ secrets.IOS_CERTIFICATES_P12 }}
+          certificate-password: ${{ secrets.IOS_CERTIFICATES_P12_PASSWORD }}
+          mobileprovision-base64: ${{ secrets.IOS_PROVISIONING_PROFILE }}
 
-#       - name: Upload artifact
-#         uses: actions/upload-artifact@v1.0.0
-#         with:
-#           name: ios
-#           path: app-release.ipa
+      - name: Upload artifact
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: ios
+          path: app-release.ipa
 
-#   deploy:
-#     needs: [build]
-#     runs-on: ubuntu-latest
-#     steps:
-#       - uses: actions/checkout@v2
+  deploy:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
 
-#       - name: Download artifact
-#         uses: actions/download-artifact@v1.0.0
-#         with:
-#           name: ios
+      - name: Download artifact
+        uses: actions/download-artifact@v1.0.0
+        with:
+          name: ios
 
-#       - name: Deploy to Firebase App Distribution
-#         uses: wzieba/Firebase-Distribution-Github-Action@v1.2.1
-#         with:
-#           appId: ${{secrets.IOS_FIREBASE_APP_ID}}
-#           token: ${{secrets.FIREBASE_TOKEN}}
-#           groups: testers
-#           file: ios/app-release.ipa
+      - name: Deploy to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1.2.1
+        with:
+          appId: ${{secrets.IOS_FIREBASE_APP_ID}}
+          token: ${{secrets.FIREBASE_TOKEN}}
+          groups: testers
+          file: ios/app-release.ipa
