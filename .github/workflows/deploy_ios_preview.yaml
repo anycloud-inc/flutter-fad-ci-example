@@ -14,7 +14,7 @@ jobs:
       - name: Import provisioning profile
         run: |
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          echo '${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}' | openssl base64 -d -out ~/Library/MobileDevice/Provisioning\ Profiles/flutter_app_store.mobileprovision
+          echo '${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}' | base64 --decode --output ~/Library/MobileDevice/Provisioning\ Profiles/app.mobileprovision
 
       - name: Import code-signing certificates
         uses: Apple-Actions/import-codesign-certs@v1
