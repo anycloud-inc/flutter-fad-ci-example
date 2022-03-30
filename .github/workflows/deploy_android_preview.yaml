@@ -35,7 +35,7 @@ jobs:
       #     export KEY_PASSWORD='${{ secrets.ANDROID_KEY_PASSWORD }}'
 
       - name: Build apk
-        run: flutter build apk --release
+        run: flutter build apk --release --build-number=$GITHUB_RUN_NUMBER
 
       - name: Upload artifact
         uses: actions/upload-artifact@v1.0.0
