@@ -14,13 +14,13 @@ jobs:
       - name: Import provisioning profile
         run: |
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          echo '${{ secrets.PROVISIONING_PROFILE }}' | openssl base64 -d -out ~/Library/MobileDevice/Provisioning\ Profiles/flutter_app_store.mobileprovision
+          echo '${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}' | openssl base64 -d -out ~/Library/MobileDevice/Provisioning\ Profiles/flutter_app_store.mobileprovision
 
       - name: Import code-signing certificates
         uses: Apple-Actions/import-codesign-certs@v1
         with:
-          p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
-          p12-password: ${{ secrets.CERTIFICATES_P12_PASSWORD }}
+          p12-file-base64: ${{ secrets.IOS_CERTIFICATE_BASE64 }}
+          p12-password: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
 
       - name: Install flutter
         uses: subosito/flutter-action@v1
@@ -43,14 +43,14 @@ jobs:
           workspace-path: ios/Runner.xcworkspace
           code-signing-identity: Apple Distribution
           team-id: ${{ secrets.IOS_TEAM_ID }}
-          p12-base64: ${{ secrets.IOS_CERTIFICATES_P12 }}
-          certificate-password: ${{ secrets.IOS_CERTIFICATES_P12_PASSWORD }}
-          mobileprovision-base64: ${{ secrets.IOS_PROVISIONING_PROFILE }}
+          p12-base64: ${{ secrets.IOS_CERTIFICATE_BASE64 }}
+          certificate-password: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
+          mobileprovision-base64: ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v1.0.0
         with:
-          name: ios
+          name: app-release.ipa
           path: app-release.ipa
 
   deploy:
@@ -62,7 +62,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v1.0.0
         with:
-          name: ios
+          name: app-release.ipa
 
       - name: Deploy to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1.2.1
