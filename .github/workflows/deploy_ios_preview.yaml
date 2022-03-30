@@ -2,7 +2,7 @@ name: Deploy iOS to Firebase App Distribution
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
   build:
