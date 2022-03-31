@@ -11,16 +11,16 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Import provisioning profile
-        run: |
-          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          echo '${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}' | base64 --decode --output ~/Library/MobileDevice/Provisioning\ Profiles/app.mobileprovision
+      # - name: Import provisioning profile
+      #   run: |
+      #     mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+      #     echo '${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}' | base64 --decode --output ~/Library/MobileDevice/Provisioning\ Profiles/app.mobileprovision
 
-      - name: Import code-signing certificates
-        uses: Apple-Actions/import-codesign-certs@v1
-        with:
-          p12-file-base64: ${{ secrets.IOS_CERTIFICATE_BASE64 }}
-          p12-password: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
+      # - name: Import code-signing certificates
+      #   uses: Apple-Actions/import-codesign-certs@v1
+      #   with:
+      #     p12-file-base64: ${{ secrets.IOS_CERTIFICATE_BASE64 }}
+      #     p12-password: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
 
       - name: Install flutter
         uses: subosito/flutter-action@v1
@@ -71,26 +71,27 @@ jobs:
       #     mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
       #     cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
 
-      - name: Build ipa
-        run: flutter build ipa --release --export-options-plist=ios/ExportOptions.plist
+      # - name: Build ipa
+      #   run: flutter build ipa --release --export-options-plist=ios/ExportOptions.plist
 
-      # - name: iOS build action
-      #   uses: yukiarrr/ios-build-action@v1.5.0
-      #   with:
-      #     output-path: app-release.ipa
-      #     project-path: ios/Runner.xcodeproj
-      #     workspace-path: ios/Runner.xcworkspace
-      #     code-signing-identity: Apple Distribution
-      #     team-id: ${{ secrets.IOS_TEAM_ID }}
-      #     p12-base64: ${{ secrets.IOS_CERTIFICATE_BASE64 }}
-      #     certificate-password: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
-      #     mobileprovision-base64: ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}
+      - name: iOS build action
+        uses: yukiarrr/ios-build-action@v1.5.0
+        with:
+          output-path: app-release.ipa
+          project-path: ios/Runner.xcodeproj
+          workspace-path: ios/Runner.xcworkspace
+          code-signing-identity: Apple Distribution
+          team-id: ${{ secrets.IOS_TEAM_ID }}
+          p12-base64: ${{ secrets.IOS_CERTIFICATE_BASE64 }}
+          certificate-password: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
+          mobileprovision-base64: ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v1.0.0
         with:
           name: ipa
-          path: build/ios/ipa/flutter_fad_ci.ipa
+          # path: build/ios/ipa/flutter_fad_ci.ipa
+          path: app-release.ipa
 
   deploy:
     needs: [build]
@@ -109,4 +110,4 @@ jobs:
           appId: ${{secrets.IOS_FIREBASE_APP_ID}}
           token: ${{secrets.FIREBASE_TOKEN}}
           groups: testers
-          file: ipa/flutter_fad_ci.ipa
+          file: ipa/app-release.ipa
