@@ -34,7 +34,7 @@ jobs:
       - name: Build ipa
         run: |
           flutter build ipa --release --export-options-plist=ios/ExportOptions.plist --build-number=$GITHUB_RUN_NUMBER;
-          find . -type f -name '*.ipa' -exec mv {} app_release.ipa \;
+          find . -type f -name '*.ipa' -exec mv {} app-release.ipa \;
 
       - name: Upload artifact
         uses: actions/upload-artifact@v1.0.0
