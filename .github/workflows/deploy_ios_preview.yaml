@@ -81,6 +81,7 @@ jobs:
           project-path: ios/Runner.xcodeproj
           workspace-path: ios/Runner.xcworkspace
           code-signing-identity: Apple Distribution
+          export-method: ad-hoc
           team-id: ${{ secrets.IOS_TEAM_ID }}
           p12-base64: ${{ secrets.IOS_CERTIFICATE_BASE64 }}
           certificate-password: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
