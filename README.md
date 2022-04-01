@@ -72,3 +72,7 @@ IOS_CERTIFICATE_BASE64 を生成する際の Export 時のパスワード
 
 2. ファイルをダウンロード
 3. `base64 XXX.movileprovision | pbcopy` でクリップボードにコピーし Secrets に貼り付け
+
+### ANDROID_FIREBASE_APP_ID
+
+firebase の Android アプリの ID
