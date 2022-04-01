@@ -67,6 +67,7 @@ IOS_CERTIFICATE_BASE64 を生成する際の Export 時のパスワード
 
 - type は Ad hoc
 - Devices にテスターのデバイスを登録
+  - デバイスが未登録の場合は https://developer.apple.com/account/resources/devices/list から登録
 - Certificates は IOS_CERTIFICATE_BASE64 生成時のもの
 
 2. ファイルをダウンロード
