@@ -13,16 +13,18 @@ Example of Continuous Delivery with Flutter, Firebase App Distribution, and Gith
 2. Firebase の登録
 
 - https://console.firebase.google.com/u/9/?hl=ja から登録
-- 登録時に google-service.json などの話など出てくるが、Firebase App Distribution を使うだけであれば無視しても大丈夫
+- 登録時に google-service.json などの話など出てくるが、Firebase App Distribution を使うだけであれば無視しても OK です
 
 3. Firebase App Distribution の登録
 
 - iOS アプリ, Android アプリの作成
 - テストグループを作成
-  - CI で testers というグループに配信するようになっているので、testers というグループ名にする必要あり
+  - CI で testers というグループに配信するようになっているので、testers というグループ名にする必要があります
   - テスターをグループに追加
 
 3. .github/workflows を自分のプロジェクトにコピペ
+
+- デフォルトでは master ブランチに PR をマージしたときにトリガーされるようになっています
 
 4. ios/ExportOptions.plist を自分のプロジェクトにコピペ
 
