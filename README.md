@@ -18,6 +18,7 @@ Example of Continuous Delivery with Flutter, Firebase App Distribution, and Gith
 
 3. Firebase App Distribution の登録
 
+- iOS, Android アプリでそれぞれ「開始」を押す
 - テストグループを作成
   - CI で testers というグループに配信するようになっているので、testers というグループ名にする必要があります
   - テスターをグループに追加
@@ -26,16 +27,9 @@ Example of Continuous Delivery with Flutter, Firebase App Distribution, and Gith
 
 - デフォルトでは master ブランチに PR をマージしたときにトリガーされるようになっています
 
-4. ios/ExportOptions.plist を自分のプロジェクトにコピペ
-
-- teamID は Apple Developer のチーム ID
-- provisioningProfiles の部分は 下の IOS_PROVISIONING_PROFILE_BASE64 を作る過程で作成したものに変更
-  - key が プロビジョニングプロファイルの App ID
-  - string が プロビジョニングプロファイル の Name
-
 ## Github の Secrets を登録
 
-- settings / secrets / actions から登録
+- Settings / Secrets / Actions / New repository secret から登録
 
 以下設定項目
 
@@ -72,3 +66,18 @@ IOS_CERTIFICATE_BASE64 を生成する際の Export 時のパスワード
 
 2. ファイルをダウンロード
 3. `base64 XXX.movileprovision | pbcopy` でクリップボードにコピーし Secrets に貼り付け
+
+## iOS 用の設定
+
+1. Signing & Capabilities / Release で manual に設定
+
+- Provisioning Profile は IOS_PROVISIONING_PROFILE_BASE64 作成時のものを指定
+
+<img src="./docs/xcode_signing.png" />
+
+2. ios/ExportOptions.plist を自分のプロジェクトにコピペ
+
+- teamID は Apple Developer のチーム ID
+- provisioningProfiles の部分は 下の IOS_PROVISIONING_PROFILE_BASE64 作成時のものに変更
+  - key が プロビジョニングプロファイルの App ID
+  - string が プロビジョニングプロファイル の Name
