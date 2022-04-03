@@ -37,6 +37,10 @@ Example of Continuous Delivery with Flutter, Firebase App Distribution, and Gith
 
 `firebase login:ci` を叩いて取得
 
+### ANDROID_FIREBASE_APP_ID
+
+firebase の Android アプリの ID
+
 ### IOS_FIREBASE_APP_ID
 
 firebase の iOS アプリの ID
@@ -79,5 +83,5 @@ IOS_CERTIFICATE_BASE64 を生成する際の Export 時のパスワード
 
 - teamID は Apple Developer のチーム ID
 - provisioningProfiles の部分は 下の IOS_PROVISIONING_PROFILE_BASE64 作成時のものに変更
-  - key が プロビジョニングプロファイルの App ID
-  - string が プロビジョニングプロファイル の Name
+  - key: アプリの bundleID
+  - string: プロビジョニングプロファイル の Name
