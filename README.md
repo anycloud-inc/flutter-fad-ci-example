@@ -76,6 +76,7 @@ IOS_CERTIFICATE_BASE64 を生成する際の Export 時のパスワード
 1. Signing & Capabilities / Release で manual に設定
 
 - Provisioning Profile は IOS_PROVISIONING_PROFILE_BASE64 作成時のものを指定
+  - ダウンロードした Provisioning Profile をクリックして開くとキーチェーンに登録されて、Xcode上で選べるようになります
 
 <img src="./docs/xcode_signing.png" />
 
